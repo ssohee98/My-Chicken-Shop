@@ -1,6 +1,11 @@
 {% extends 'shop/base.html' %}
 
 {% block main_area %}
+                {% if user.is_authenticated%}
+                    {% if user.is_superuser or user.is_staff %}
+                        <a class="btn btn-info btn-sm float-right" href="/shop/create_menu/" role="button"><i class="fas fa-pen"></i>&nbsp;&nbsp;New Menu</a>
+                    {% endif %}
+                {% endif %}
 
                 <h1>Shop {% if category %}<span class="badge badge-secondary">{{ category }}</span>{% endif %}</h1>
 
