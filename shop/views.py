@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Menu, Category
+from django.shortcuts import get_object_or_404
+from .models import Menu, Category, Comment
 from django.core.exceptions import PermissionDenied
+from .forms import CommentForm
+
 
 class MenuList(ListView):
     model = Menu
@@ -13,6 +16,7 @@ class MenuList(ListView):
         context['no_category_menu_count'] = Menu.objects.filter(category=None).count()
         return context
 
+
 class MenuDetail(DetailView):
     model = Menu
 
@@ -20,7 +24,9 @@ class MenuDetail(DetailView):
         context = super(MenuDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_menu_count'] = Menu.objects.filter(category=None).count()
+        context['comment_form'] = CommentForm
         return context
+
 
 class MenuCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Menu
@@ -37,6 +43,7 @@ class MenuCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         else:
             return redirect('/shop/')
 
+
 class MenuUpdate(LoginRequiredMixin, UpdateView):
     model = Menu
     fields = ['title', 'hook_text', 'content', 'head_image', 'price', 'category']
@@ -48,6 +55,7 @@ class MenuUpdate(LoginRequiredMixin, UpdateView):
             return super(MenuUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
 
 def category_page(request, slug):
     if slug == 'no_category':
@@ -67,24 +75,41 @@ def category_page(request, slug):
             'category': category,
         }
     )
-# def index(request):
-#     posts = Post.objects.all().order_by('-pk')
-#
-#     return render(
-#         request,
-#         'blog/menu_list.html',
-#         {
-#             'posts': posts,
-#         }
-#     )
 
-# def single_menu_page(request, pk):
-#     menu = Menu.objects.get(pk=pk)
-#
-#     return render(
-#         request,
-#         'shop/menu_detail.html',
-#         {
-#             'menu': menu,
-#         }
-#     )
+
+def new_comment(request, pk):
+    if request.user.is_authenticated:
+        menu = get_object_or_404(Menu, pk=pk)
+
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.menu = menu
+                comment.author = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(menu.get_absolute_url())
+    else:
+        raise PermissionDenied
+
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    menu = comment.menu
+    if request.user.is_authenticated and request.user == comment.author:
+        comment.delete()
+        return redirect(menu.get_absolute_url())
+    else:
+        raise PermissionDenied
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+

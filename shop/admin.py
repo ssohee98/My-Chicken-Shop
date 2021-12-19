@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Menu, Category
+from markdownx.admin import MarkdownxModelAdmin
+from .models import Menu, Category, Comment
 
-admin.site.register(Menu)
+admin.site.register(Menu, MarkdownxModelAdmin)
+admin.site.register(Comment)
 
 
 class CategoryAdmin(admin.ModelAdmin):
