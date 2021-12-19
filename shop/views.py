@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from .models import Menu, Category, Comment
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from .forms import CommentForm
 
 
@@ -114,3 +115,17 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
         else:
             raise PermissionDenied
 
+class MenuSearch(MenuList):
+    paginate_by = None
+
+    def get_queryset(self):
+        q = self.kwargs['q']
+        menu_list = Menu.objects.filter(Q(title__contains=q)).distinct()
+        return menu_list
+
+    def get_context_data(self, **kwargs):
+        context = super(MenuSearch, self).get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
+
+        return context
