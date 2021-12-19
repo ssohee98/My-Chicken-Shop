@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Menu
+from .models import Menu, Category
 
 admin.site.register(Menu)
-# Register your models here.
+
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name', )}
+
+admin.site.register(Category, CategoryAdmin)

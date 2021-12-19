@@ -6,6 +6,12 @@
 
 {% block main_area %}
     <div area="menu-area">
+        {% if menu.category %}
+            <span class="badge badge-secondary float-right">{{ menu.category }}</span>
+        {% else %}
+            <span class="badge badge-secondary float-right">미분류</span>
+        {% endif %}
+
         <!-- Title -->
         <h1 class="mt-4">{{ menu.title }}</h1>
         <h5 class="text-muted">{{ menu.hook_text }}</h5>

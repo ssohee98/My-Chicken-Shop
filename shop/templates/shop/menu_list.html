@@ -6,13 +6,19 @@
 
                 {% for m in menu_list %}
                 <!-- Shop Menu -->
-                <div class="card mb-4">
+                <div class="card mb-4" id="menu-{{ m.pk }}">
                     {% if m.head_image %}
                         <img class="card-img-top" src="{{ m.head_image.url }}" alt="{{ m }} head image">
                     {% else %}
                         <img class="card-img-top" src="https://picsum.photos/seed/{{ m.id }}/800/200" alt="random_image">
                     {% endif %}
                     <div class="card-body">
+                        {% if m.category %}
+                            <span class="badge badge-secondary float-right">{{ m.category }}</span>
+                        {% else %}
+                            <span class="badge badge-secondary float-right">미분류</span>
+                        {% endif %}
+
                         <h2 class="card-title">{{ m.title }}</h2>
                         <p class="card-text">{{ m.content }}</p>
                         <a href="{{ m.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
