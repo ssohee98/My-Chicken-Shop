@@ -25,7 +25,10 @@
                         {% endif %}
 
                         <h2 class="card-title">{{ m.title }}</h2>
-                        <p class="card-text">{{ m.content }}</p>
+                        {% if p.hook_text %}
+                            <h5 class="text-muted">{{ m.hook_text }}</h5>
+                        {% endif %}
+                        <p class="card-text">{{ m.get_content_markdown | truncatewords_html:45 | safe }}</p>
                         <a href="{{ m.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
                     </div>
                     <div class="card-footer text-muted">

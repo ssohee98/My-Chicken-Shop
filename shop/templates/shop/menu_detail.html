@@ -41,9 +41,10 @@
         {% endif %}
         <hr>
 
-        <!-- Post Content -->
-        <p>{{ menu.content }}</p>
+        <!-- Menu Content -->
+        <p>{{ menu.get_content_markdown | safe }}</p>
         <hr>
+        <h10>치킨 한마리(뼈) 기준 </h10><h4>{{ menu.price }} 원</h4>
     </div>
 
       <div id="comment-area">

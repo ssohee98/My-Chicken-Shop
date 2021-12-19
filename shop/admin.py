@@ -3,6 +3,7 @@ from .models import Menu, Category
 
 admin.site.register(Menu)
 
+
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdown
 import os
 
 class Category(models.Model):
@@ -18,7 +20,7 @@ class Category(models.Model):
 class Menu(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
-    content = models.TextField()
+    content = MarkdownxField()
     price = models.IntegerField()
 
     head_image = models.ImageField(upload_to='blog/images/%Y/%m/%d/', blank=True)
@@ -32,3 +34,6 @@ class Menu(models.Model):
 
     def get_absolute_url(self):
         return f'/shop/{self.pk}/'
+
+    def get_content_markdown(self):
+        return markdown(self.content)
