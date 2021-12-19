@@ -24,6 +24,10 @@
 
         <hr>
 
+        {% if user.is_authenticated and user == menu.author %}
+            <a class="btn btn-info btn-sm float-right" href="/shop/update_menu/{{ menu.pk }}/" role="button"><i class="fas fa-pen"></i>  Edit Menu</a>
+        {% endif %}
+
         <!-- Date/Time -->
         <p>Posted on {{ menu.created_at }}</p>
 
