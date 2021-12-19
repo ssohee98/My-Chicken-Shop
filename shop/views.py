@@ -20,6 +20,24 @@ class MenuDetail(DetailView):
         context['no_category_menu_count'] = Menu.objects.filter(category=None).count()
         return context
 
+def category_page(request, slug):
+    if slug == 'no_category':
+        category = '미분류'
+        menu_list = Menu.objects.filter(category=None)
+    else:
+        category = Category.objects.get(slug=slug)
+        menu_list = Menu.objects.filter(category=category)
+
+    return render(
+        request,
+        'shop/menu_list.html',
+        {
+            'menu_list': menu_list,
+            'categories': Category.objects.all(),
+            'no_category_menu_count': Menu.objects.filter(category=None).count(),
+            'category': category,
+        }
+    )
 # def index(request):
 #     posts = Post.objects.all().order_by('-pk')
 #

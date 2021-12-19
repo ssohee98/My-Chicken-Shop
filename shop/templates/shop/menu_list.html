@@ -2,7 +2,7 @@
 
 {% block main_area %}
 
-                <h1>Shop</h1>
+                <h1>Shop {% if category %}<span class="badge badge-secondary">{{ category }}</span>{% endif %}</h1>
 
                 {% for m in menu_list %}
                 <!-- Shop Menu -->
