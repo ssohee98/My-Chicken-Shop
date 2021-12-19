@@ -7,7 +7,7 @@
 <body>
     <h1>Shop</h1>
 
-    {% for m in menus %}
+    {% for m in menu_list %}
         <hr/>
         <h2><a href="{{ m.get_absolute_url }}">{{ m.title }}</a></h2>
         <h4>{{ m.created_at }}</h4>
