@@ -9,6 +9,7 @@ from .forms import CommentForm
 
 class MenuList(ListView):
     model = Menu
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super(MenuList, self).get_context_data()
